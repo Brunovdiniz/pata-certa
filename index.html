@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PataCerta — Recomendador Inteligente de Cães</title>
+  <meta name="description" content="Nossa IA analisa seu perfil comportamental e recomenda a raça de cão ideal para adoção ou compra." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } }
+    };
+  </script>
+  <style>
+    @keyframes bounce-paw { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-14px) rotate(4deg); } }
+    @keyframes sniff { 0%,100% { opacity:.25; transform: scale(.9);} 50% { opacity:1; transform: scale(1.1);} }
+    @keyframes progress { from { width: 0%; } to { width: 100%; } }
+    @keyframes pop-in { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+    .paw-bounce { animation: bounce-paw 1s ease-in-out infinite; }
+    .paw-sniff { animation: sniff 1.2s ease-in-out infinite; }
+    .bar-fill { animation: progress 2s linear forwards; }
+    .pop-in { animation: pop-in .5s ease-out both; }
+    @media (prefers-reduced-motion: reduce) {
+      .paw-bounce, .paw-sniff, .bar-fill, .pop-in { animation: none !important; }
+      .bar-fill { width: 100%; }
+    }
+    :focus-visible { outline: 3px solid #0369a1; outline-offset: 2px; }
+  </style>
+</head>
+<body class="font-sans text-slate-700 bg-gradient-to-b from-sky-50 via-white to-orange-50 min-h-screen antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sky-800 focus:shadow">Ir para o conteúdo</a>
+
+  <!-- Barra superior -->
+  <header class="mx-auto flex max-w-5xl items-center justify-between px-5 py-5">
+    <div class="flex items-center gap-2 text-sky-800">
+      <svg class="h-8 w-8" viewBox="0 0 64 64" aria-hidden="true" fill="currentColor"><ellipse cx="32" cy="42" rx="14" ry="12"/><ellipse cx="13" cy="28" rx="6" ry="8"/><ellipse cx="25" cy="16" rx="6" ry="8"/><ellipse cx="39" cy="16" rx="6" ry="8"/><ellipse cx="51" cy="28" rx="6" ry="8"/></svg>
+      <span class="text-xl font-black tracking-tight">PataCerta</span>
+    </div>
+    <span class="hidden rounded-full bg-emerald-100 px-3 py-1 text-sm font-bold text-emerald-900 sm:inline">Módulo de Interface com o Usuário</span>
+  </header>
+
+  <main id="main" class="mx-auto max-w-5xl px-5 pb-20">
+
+    <!-- 1. HERO -->
+    <section class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-sky-100 via-sky-50 to-emerald-100 px-6 py-12 text-center shadow-sm sm:px-12 sm:py-16" aria-labelledby="hero-title">
+      <svg class="pointer-events-none absolute -left-6 -top-6 h-40 w-40 rotate-[-18deg] text-sky-200" viewBox="0 0 64 64" aria-hidden="true" fill="currentColor"><ellipse cx="32" cy="42" rx="14" ry="12"/><ellipse cx="13" cy="28" rx="6" ry="8"/><ellipse cx="25" cy="16" rx="6" ry="8"/><ellipse cx="39" cy="16" rx="6" ry="8"/><ellipse cx="51" cy="28" rx="6" ry="8"/></svg>
+      <svg class="pointer-events-none absolute -bottom-8 -right-4 h-44 w-44 rotate-[16deg] text-orange-200" viewBox="0 0 64 64" aria-hidden="true" fill="currentColor"><ellipse cx="32" cy="42" rx="14" ry="12"/><ellipse cx="13" cy="28" rx="6" ry="8"/><ellipse cx="25" cy="16" rx="6" ry="8"/><ellipse cx="39" cy="16" rx="6" ry="8"/><ellipse cx="51" cy="28" rx="6" ry="8"/></svg>
+      <div class="relative">
+        <p class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-1.5 text-sm font-bold text-sky-900 ring-1 ring-sky-200">
+          <span aria-hidden="true">✨</span> Recomendação com Inteligência Artificial
+        </p>
+        <h1 id="hero-title" class="mx-auto max-w-3xl text-4xl font-black leading-tight tracking-tight text-slate-800 sm:text-5xl">
+          Encontre o <span class="text-sky-700">melhor amigo</span> para a <span class="text-orange-600">sua vida</span>
+        </h1>
+        <p class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-700">
+          Conte um pouco sobre sua rotina, sua casa e seu estilo de vida. Nossa IA analisa o seu perfil comportamental e cruza com as características de dezenas de raças para indicar a que mais combina com você — seja para adotar ou comprar.
+        </p>
+        <a href="#perfil" class="mt-8 inline-flex items-center gap-2 rounded-full bg-sky-700 px-7 py-3 text-lg font-extrabold text-white shadow-md transition hover:bg-sky-800 focus-visible:ring-4 focus-visible:ring-sky-300">
+          Começar agora <span aria-hidden="true">→</span>
+        </a>
+        <ul class="mx-auto mt-8 flex max-w-xl flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-semibold text-slate-700">
+          <li class="flex items-center gap-1.5"><span aria-hidden="true">⏱️</span> Leva ~1 minuto</li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true">🔒</span> Sem cadastro</li>
+          <li class="flex items-center gap-1.5"><span aria-hidden="true">💚</span> Foco em bem-estar do cão</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Status do Módulo de IA -->
+    <section class="mt-6" aria-label="Status do modelo de IA">
+      <details id="ia-panel" class="rounded-2xl bg-white px-5 py-4 shadow-sm ring-1 ring-slate-100">
+        <summary class="flex cursor-pointer flex-wrap items-center gap-x-3 gap-y-1 text-sm font-bold text-slate-700">
+          <span aria-hidden="true">🧠</span>
+          <span>Módulo de IA:</span>
+          <span id="ia-status" role="status" class="text-sky-800">preparando treinamento…</span>
+        </summary>
+        <div id="ia-details" class="mt-4 hidden text-sm text-slate-700">
+          <p class="mb-4 leading-relaxed">Rede neural (MLP 17→24→12→1, backpropagation + Adam) treinada do zero neste navegador com perfis sintéticos de tutores cruzados com as raças da base. A validação usa perfis que o modelo nunca viu.</p>
+          <dl id="ia-metrics" class="grid grid-cols-2 gap-3 sm:grid-cols-4"></dl>
+          <h3 class="mb-2 mt-5 font-extrabold text-slate-800">Comparação com baselines (perfis de validação)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead><tr class="border-b border-slate-200 text-xs text-slate-600"><th class="py-2 pr-3 font-bold">Método</th><th class="py-2 pr-3 font-bold">Erro médio</th><th class="py-2 pr-3 font-bold">Top-1</th><th class="py-2 font-bold">Top-3</th></tr></thead>
+              <tbody id="ia-baselines"></tbody>
+            </table>
+          </div>
+          <figure class="mt-5">
+            <svg id="ia-chart" viewBox="0 0 400 120" class="h-32 w-full rounded-xl bg-slate-50" role="img" aria-label="Curva de erro por época de treinamento"></svg>
+            <figcaption class="mt-1 flex gap-4 text-xs font-bold text-slate-600">
+              <span><span class="text-sky-700">━</span> erro no treino</span>
+              <span><span class="text-orange-600">━</span> erro na validação</span>
+            </figcaption>
+          </figure>
+        </div>
+      </details>
+    </section>
+
+    <!-- 2. FORMULÁRIO -->
+    <section id="perfil" class="mt-10 scroll-mt-6" aria-labelledby="form-title">
+      <div id="form-wrapper" class="rounded-[2rem] bg-white p-6 shadow-lg ring-1 ring-slate-100 sm:p-10">
+        <div class="mb-8">
+          <h2 id="form-title" tabindex="-1" class="text-2xl font-black text-slate-800 sm:text-3xl">Seu perfil comportamental</h2>
+          <p class="mt-2 text-slate-600">Responda com sinceridade — quanto mais real o perfil, melhor a recomendação (e mais feliz o cão!). Todos os campos são obrigatórios.</p>
+          <div class="mt-5" aria-hidden="true">
+            <div class="h-2 w-full overflow-hidden rounded-full bg-slate-100"><div id="form-progress" class="h-full w-0 rounded-full bg-emerald-500 transition-all duration-300"></div></div>
+            <p class="mt-1 text-right text-xs font-bold text-slate-500"><span id="form-progress-text">0</span> de 6 respondidas</p>
+          </div>
+        </div>
+
+        <form id="profile-form" class="space-y-9" novalidate>
+
+          <!-- Atividade -->
+          <fieldset>
+            <legend class="mb-3 text-lg font-extrabold text-slate-800"><span class="mr-1 text-sky-700">1.</span> Qual é o seu nível de atividade física?</legend>
+            <div id="g-activity" class="grid gap-3 sm:grid-cols-3"></div>
+          </fieldset>
+
+          <!-- Moradia -->
+          <div>
+            <label for="housing" class="mb-3 block text-lg font-extrabold text-slate-800"><span class="mr-1 text-sky-700">2.</span> Qual é o seu tipo de moradia?</label>
+            <select id="housing" name="housing" required class="w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3.5 text-base font-semibold text-slate-800 transition hover:border-sky-300 focus:border-sky-500">
+              <option value="">Selecione…</option>
+              <option value="1">🏢 Apartamento pequeno</option>
+              <option value="2">🏙️ Apartamento grande</option>
+              <option value="3">🏠 Casa sem quintal</option>
+              <option value="4">🌳 Casa com quintal grande</option>
+            </select>
+          </div>
+
+          <!-- Tempo -->
+          <fieldset>
+            <legend class="mb-3 text-lg font-extrabold text-slate-800"><span class="mr-1 text-sky-700">3.</span> Quanto tempo por dia você pode dedicar ao cão?</legend>
+            <div id="g-time" class="grid gap-3 sm:grid-cols-3"></div>
+          </fieldset>
+
+          <!-- Experiência -->
+          <div>
+            <label for="experience" class="mb-3 block text-lg font-extrabold text-slate-800"><span class="mr-1 text-sky-700">4.</span> Qual é a sua experiência prévia com cães?</label>
+            <select id="experience" name="experience" required class="w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3.5 text-base font-semibold text-slate-800 transition hover:border-sky-300 focus:border-sky-500">
+              <option value="">Selecione…</option>
+              <option value="1">🌱 Nenhuma</option>
+              <option value="2">🧸 Tive na infância</option>
+              <option value="3">🐕 Tenho / tive recentemente</option>
+              <option value="4">🎓 Sou especialista</option>
+            </select>
+          </div>
+
+          <!-- Vida social -->
+          <fieldset>
+            <legend class="mb-3 text-lg font-extrabold text-slate-800"><span class="mr-1 text-sky-700">5.</span> Com que frequência o cão terá contato com visitas e outros cães?</legend>
+            <div id="g-social" class="grid gap-3 sm:grid-cols-3"></div>
+          </fieldset>
+
+          <!-- Crianças / animais -->
+          <fieldset>
+            <legend class="mb-3 text-lg font-extrabold text-slate-800"><span class="mr-1 text-sky-700">6.</span> Você convive com crianças pequenas ou outros animais?</legend>
+            <div id="g-kids" class="grid max-w-md gap-3 sm:grid-cols-2"></div>
+          </fieldset>
+
+          <p id="form-error" role="alert" class="hidden rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-900 ring-1 ring-rose-200"></p>
+
+          <div class="flex flex-col items-center gap-3 border-t border-slate-100 pt-8 sm:flex-row sm:justify-between">
+            <p class="text-sm text-slate-600">Seus dados são usados apenas para gerar esta recomendação.</p>
+            <button type="submit" class="w-full rounded-full bg-emerald-700 px-8 py-4 text-lg font-extrabold text-white shadow-md transition hover:bg-emerald-800 focus-visible:ring-4 focus-visible:ring-emerald-300 sm:w-auto">
+              🐾 Descobrir minha raça ideal
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- 3. PROCESSAMENTO -->
+      <div id="loading" class="hidden rounded-[2rem] bg-white px-6 py-16 text-center shadow-lg ring-1 ring-slate-100 sm:px-12" role="status" aria-live="polite">
+        <div class="mx-auto mb-8 flex h-28 w-28 items-center justify-center rounded-full bg-sky-100">
+          <svg class="paw-bounce h-16 w-16 text-sky-700" viewBox="0 0 64 64" aria-hidden="true" fill="currentColor"><ellipse cx="32" cy="42" rx="14" ry="12"/><ellipse cx="13" cy="28" rx="6" ry="8"/><ellipse cx="25" cy="16" rx="6" ry="8"/><ellipse cx="39" cy="16" rx="6" ry="8"/><ellipse cx="51" cy="28" rx="6" ry="8"/></svg>
+        </div>
+        <h2 class="text-2xl font-black text-slate-800">Nossa IA está trabalhando…</h2>
+        <p class="mx-auto mt-3 max-w-xl text-lg text-slate-600">Nossa IA está analisando seu perfil comportamental e cruzando com nosso banco de dados de raças.</p>
+        <div class="mx-auto mt-8 h-3 w-full max-w-md overflow-hidden rounded-full bg-slate-100" aria-hidden="true">
+          <div id="loading-bar" class="bar-fill h-full rounded-full bg-gradient-to-r from-sky-500 via-emerald-500 to-orange-400"></div>
+        </div>
+        <ul id="loading-steps" class="mx-auto mt-8 max-w-md space-y-3 text-left text-base font-semibold text-slate-700"></ul>
+      </div>
+
+      <!-- 4. RESULTADO -->
+      <div id="result" class="hidden" aria-live="polite"></div>
+    </section>
+
+    <footer class="mt-14 text-center text-sm text-slate-500">
+      <p>Recomendações geradas por um modelo treinado a partir de perfis sintéticos e características de raças do AKC (American Kennel Club) — uma orientação, não substitui a avaliação de um profissional.</p>
+      <p class="mt-1">Adotar é um ato de amor — considere sempre abrigos e ONGs primeiro. 💙</p>
+    </footer>
+  </main>
+
+  <script src="dados/racas.js"></script>
+  <script src="ia/modelo.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    /* ---------- Configuração das opções (renderizadas como cartões de rádio) ---------- */
+    var OPTIONS = {
+      activity: [
+        { value: '1', icon: '🛋️', label: 'Sedentário', desc: 'Prefiro atividades tranquilas e pouco movimento.' },
+        { value: '2', icon: '🚶', label: 'Moderado', desc: 'Caminhadas e exercícios algumas vezes por semana.' },
+        { value: '3', icon: '🏃', label: 'Muito ativo', desc: 'Corro, pedalo ou treino quase todos os dias.' }
+      ],
+      time: [
+        { value: '1', icon: '⏳', label: 'Menos de 1h', desc: 'Rotina corrida, pouco tempo livre.' },
+        { value: '2', icon: '🕑', label: '1 a 3 horas', desc: 'Consigo passear e brincar diariamente.' },
+        { value: '3', icon: '🕰️', label: 'Mais de 3 horas', desc: 'Trabalho em casa ou tenho muito tempo livre.' }
+      ],
+      social: [
+        { value: '1', icon: '🏡', label: 'Raramente', desc: 'Poucas visitas e pouco contato com outros cães.' },
+        { value: '2', icon: '👥', label: 'Às vezes', desc: 'Visitas ocasionais e alguns encontros com outros cães.' },
+        { value: '3', icon: '🎉', label: 'Frequentemente', desc: 'Casa cheia, parques e muito contato com outros cães.' }
+      ],
+      kids: [
+        { value: 'sim', icon: '👶', label: 'Sim', desc: 'Há crianças ou outros pets em casa.' },
+        { value: 'nao', icon: '🙋', label: 'Não', desc: 'Só adultos e nenhum outro animal.' }
+      ]
+    };
+
+    function renderRadioGroup(containerId, name, items) {
+      var c = document.getElementById(containerId);
+      c.innerHTML = items.map(function (o, i) {
+        var id = name + '-' + i;
+        return '' +
+          '<div class="relative">' +
+            '<input class="peer sr-only" type="radio" name="' + name + '" id="' + id + '" value="' + o.value + '" required />' +
+            '<label for="' + id + '" class="flex h-full cursor-pointer flex-col gap-1 rounded-2xl border-2 border-slate-200 bg-white p-4 transition ' +
+              'hover:border-sky-300 hover:bg-sky-50 peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:shadow-md ' +
+              'peer-focus-visible:ring-4 peer-focus-visible:ring-sky-300">' +
+              '<span class="text-2xl" aria-hidden="true">' + o.icon + '</span>' +
+              '<span class="text-base font-extrabold text-slate-800">' + o.label + '</span>' +
+              '<span class="text-sm leading-snug text-slate-600">' + o.desc + '</span>' +
+            '</label>' +
+          '</div>';
+      }).join('');
+    }
+    renderRadioGroup('g-activity', 'activity', OPTIONS.activity);
+    renderRadioGroup('g-time', 'time', OPTIONS.time);
+    renderRadioGroup('g-social', 'social', OPTIONS.social);
+    renderRadioGroup('g-kids', 'kids', OPTIONS.kids);
+
+    /* ---------- Rótulos usados na justificativa ---------- */
+    var HOUSING_LABEL = { 1: 'apartamento pequeno', 2: 'apartamento grande', 3: 'casa sem quintal', 4: 'casa com quintal grande' };
+    var HOUSING_PHRASE = { 1: 'mora em um apartamento pequeno', 2: 'mora em um apartamento grande', 3: 'mora em uma casa sem quintal', 4: 'tem uma casa com quintal grande' };
+    var ACTIVITY_LABEL = { 1: 'sedentário', 2: 'moderado', 3: 'muito ativo' };
+    var TIME_LABEL = { 1: 'menos de 1h por dia', 2: '1 a 3h por dia', 3: 'mais de 3h por dia' };
+    var EXP_LABEL = { 1: 'nenhuma experiência', 2: 'experiência da infância', 3: 'experiência recente', 4: 'perfil de especialista' };
+
+
+    /* ---------- Utilidades ---------- */
+    function $(id) { return document.getElementById(id); }
+
+    function dogSVG(b) {
+      var ears = b.ear === 'floppy'
+        ? '<ellipse cx="46" cy="96" rx="22" ry="42" fill="' + b.dark + '" transform="rotate(14 46 96)"/>' +
+          '<ellipse cx="154" cy="96" rx="22" ry="42" fill="' + b.dark + '" transform="rotate(-14 154 96)"/>'
+        : '<path d="M44 84 L52 18 L100 64 Z" fill="' + b.dark + '"/><path d="M156 84 L148 18 L100 64 Z" fill="' + b.dark + '"/>';
+      return '<svg viewBox="0 0 200 200" class="h-full w-full" role="img" aria-label="Ilustração ilustrativa de um cão da raça ' + b.name + '" xmlns="http://www.w3.org/2000/svg">' +
+        ears +
+        '<ellipse cx="100" cy="106" rx="56" ry="58" fill="' + b.fur + '"/>' +
+        '<ellipse cx="100" cy="130" rx="32" ry="25" fill="' + b.light + '"/>' +
+        '<circle cx="78" cy="98" r="8" fill="#334155"/><circle cx="122" cy="98" r="8" fill="#334155"/>' +
+        '<circle cx="75.5" cy="95" r="2.6" fill="#fff"/><circle cx="119.5" cy="95" r="2.6" fill="#fff"/>' +
+        '<ellipse cx="100" cy="117" rx="12" ry="8.5" fill="#1e293b"/>' +
+        '<path d="M100 125 v8 M100 133 q-10 9 -19 1 M100 133 q10 9 19 1" stroke="#1e293b" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+        '<path d="M92 140 q8 18 16 0 z" fill="#fb7185"/>' +
+        '</svg>';
+    }
+
+    var form = $('profile-form');
+    var formWrapper = $('form-wrapper');
+    var loading = $('loading');
+    var result = $('result');
+
+    /* ---------- Progresso do formulário ---------- */
+    function updateProgress() {
+      var done = 0;
+      if (form.elements.activity.value) done++;
+      if ($('housing').value) done++;
+      if (form.elements.time.value) done++;
+      if ($('experience').value) done++;
+      if (form.elements.social.value) done++;
+      if (form.elements.kids.value) done++;
+      $('form-progress').style.width = (done / 6 * 100) + '%';
+      $('form-progress-text').textContent = done;
+    }
+    form.addEventListener('input', updateProgress);
+    form.addEventListener('change', updateProgress);
+    updateProgress();
+
+    /* ---------- Captura dos dados ---------- */
+    function readProfile() {
+      var fd = new FormData(form);
+      return {
+        activity: Number(fd.get('activity')),
+        housing: Number(fd.get('housing')),
+        time: Number(fd.get('time')),
+        experience: Number(fd.get('experience')),
+        social: Number(fd.get('social')),
+        kids: fd.get('kids')
+      };
+    }
+
+    function validate() {
+      var missing = [];
+      if (!form.elements.activity.value) missing.push('nível de atividade');
+      if (!$('housing').value) missing.push('tipo de moradia');
+      if (!form.elements.time.value) missing.push('tempo disponível');
+      if (!$('experience').value) missing.push('experiência com cães');
+      if (!form.elements.social.value) missing.push('contato com visitas e outros cães');
+      if (!form.elements.kids.value) missing.push('convívio com crianças/animais');
+      return missing;
+    }
+
+    /* ---------- Estado de processamento ---------- */
+    var STEPS = [
+      'Lendo seu perfil comportamental…',
+      'Cruzando com o banco de dados de raças…',
+      'Calculando compatibilidade e justificativas…'
+    ];
+    var timers = [];
+
+    function showLoading() {
+      var ul = $('loading-steps');
+      ul.innerHTML = STEPS.map(function (s, i) {
+        return '<li id="step-' + i + '" class="flex items-center gap-3 opacity-40 transition-opacity duration-300">' +
+          '<span class="paw-sniff inline-block h-3 w-3 rounded-full bg-sky-500" aria-hidden="true"></span><span>' + s + '</span></li>';
+      }).join('');
+      formWrapper.classList.add('hidden');
+      result.classList.add('hidden');
+      loading.classList.remove('hidden');
+      // reinicia a animação da barra
+      var bar = $('loading-bar');
+      bar.classList.remove('bar-fill'); void bar.offsetWidth; bar.classList.add('bar-fill');
+      STEPS.forEach(function (_, i) {
+        timers.push(setTimeout(function () {
+          var li = $('step-' + i);
+          if (li) li.classList.remove('opacity-40');
+        }, i * 650));
+      });
+      loading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ---------- Resultado ---------- */
+    function listItems(factors) {
+      return factors.map(function (f) {
+        return '<li class="flex gap-3 rounded-xl px-3 py-2.5 ' + (f.ok ? 'bg-emerald-50' : 'bg-orange-50') + '">' +
+          '<span class="mt-0.5 shrink-0 text-lg" aria-hidden="true">' + (f.ok ? '✅' : '⚠️') + '</span>' +
+          '<span class="text-[0.95rem] leading-snug text-slate-800"><span class="sr-only">' + (f.ok ? 'Ponto positivo: ' : 'Ponto de atenção: ') + '</span>' + f.text + '</span></li>';
+      }).join('');
+    }
+
+    function showResult(p) {
+      var ranking = PataIA.recomendar(p);
+      var top = ranking[0];
+      var b = top.breed;
+      var alts = ranking.slice(1, 3);
+
+      var justification = 'Recomendamos o <strong>' + b.name + '</strong> porque você ' + HOUSING_PHRASE[p.housing] +
+        ' e tem perfil <strong>' + ACTIVITY_LABEL[p.activity] + '</strong>, com ' + TIME_LABEL[p.time] +
+        ' para se dedicar' + (p.kids === 'sim' ? ' e convive com crianças ou outros animais' : '') + '. ' + b.why;
+
+      var scoreColor = top.score >= 85 ? 'text-emerald-700' : (top.score >= 70 ? 'text-sky-700' : 'text-orange-700');
+
+      result.innerHTML =
+        '<article class="pop-in overflow-hidden rounded-[2rem] bg-white shadow-xl ring-1 ring-slate-100" aria-labelledby="res-title">' +
+          '<div class="grid md:grid-cols-5">' +
+            '<div class="relative flex flex-col items-center justify-center gap-4 p-8 md:col-span-2" style="background:' + b.bg + '">' +
+              '<span class="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-sky-900">Melhor combinação</span>' +
+              '<div class="mt-6 h-52 w-52 overflow-hidden rounded-full bg-white/70 p-2 shadow-inner ring-4 ring-white sm:h-60 sm:w-60">' + dogSVG(b) + '</div>' +
+              '<div class="text-center">' +
+                '<p class="text-sm font-bold text-slate-700">Compatibilidade</p>' +
+                '<p class="text-5xl font-black ' + scoreColor + '">' + top.score + '%</p>' +
+              '</div>' +
+              '<div class="h-3 w-full max-w-[14rem] overflow-hidden rounded-full bg-white/80" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + top.score + '" aria-label="Compatibilidade com ' + b.name + '">' +
+                '<div class="h-full rounded-full bg-gradient-to-r from-sky-500 to-emerald-500" style="width:' + top.score + '%"></div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="p-6 sm:p-10 md:col-span-3">' +
+              '<p class="text-sm font-extrabold uppercase tracking-wide text-orange-700">Sua raça ideal</p>' +
+              '<h2 id="res-title" tabindex="-1" class="mt-1 text-4xl font-black text-slate-800 sm:text-5xl">' + b.name + '</h2>' +
+              '<p class="mt-5 text-lg leading-relaxed text-slate-700">' + justification + '</p>' +
+              '<h3 class="mb-3 mt-7 text-base font-extrabold text-slate-800">Por que combina (e o que observar)</h3>' +
+              '<ul class="space-y-2">' + listItems(top.factors) + '</ul>' +
+              '<div class="mt-8 grid gap-3 sm:grid-cols-2">' +
+                '<button type="button" data-action="adocao" class="rounded-full bg-emerald-700 px-6 py-3.5 text-base font-extrabold text-white shadow transition hover:bg-emerald-800 focus-visible:ring-4 focus-visible:ring-emerald-300">💚 Buscar para Adoção</button>' +
+                '<button type="button" data-action="criadores" class="rounded-full border-2 border-orange-300 bg-orange-100 px-6 py-3.5 text-base font-extrabold text-orange-900 transition hover:bg-orange-200 focus-visible:ring-4 focus-visible:ring-orange-300">🧡 Buscar Criadores</button>' +
+              '</div>' +
+              '<p id="action-feedback" class="mt-4 hidden rounded-xl bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-900 ring-1 ring-sky-100" role="status"></p>' +
+            '</div>' +
+          '</div>' +
+        '</article>' +
+
+        '<section class="mt-8" aria-labelledby="alts-title">' +
+          '<h3 id="alts-title" class="mb-4 text-xl font-black text-slate-800">Outras raças compatíveis com você</h3>' +
+          '<div class="grid gap-4 sm:grid-cols-2">' +
+            alts.map(function (a) {
+              return '<div class="flex items-center gap-4 rounded-2xl bg-white p-4 shadow ring-1 ring-slate-100">' +
+                '<div class="h-20 w-20 shrink-0 overflow-hidden rounded-full p-1" style="background:' + a.breed.bg + '">' + dogSVG(a.breed) + '</div>' +
+                '<div class="min-w-0"><p class="text-lg font-extrabold text-slate-800">' + a.breed.name + '</p>' +
+                '<p class="text-sm font-bold text-sky-800">' + a.score + '% compatível</p></div></div>';
+            }).join('') +
+          '</div>' +
+        '</section>' +
+
+        '<div class="mt-8 flex flex-col items-center gap-3 text-center">' +
+          '<button type="button" id="restart" class="rounded-full border-2 border-sky-200 bg-white px-6 py-3 text-base font-extrabold text-sky-800 transition hover:bg-sky-50 focus-visible:ring-4 focus-visible:ring-sky-300">↺ Refazer o teste</button>' +
+          '<p class="max-w-xl text-xs text-slate-500">Resultado previsto pelo modelo de IA treinado neste navegador.</p>' +
+        '</div>';
+
+      loading.classList.add('hidden');
+      result.classList.remove('hidden');
+      var title = $('res-title');
+      title.focus({ preventScroll: true });
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Ações dos botões (simuladas)
+      result.querySelectorAll('[data-action]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var fb = $('action-feedback');
+          fb.classList.remove('hidden');
+          fb.textContent = btn.getAttribute('data-action') === 'adocao'
+            ? 'Em produção, aqui buscaremos ONGs e abrigos com ' + b.name + ' (ou mistura) disponíveis para adoção na sua região.'
+            : 'Em produção, aqui listaremos criadores responsáveis e registrados de ' + b.name + ' perto de você.';
+        });
+      });
+      $('restart').addEventListener('click', restart);
+    }
+
+    function restart() {
+      form.reset();
+      updateProgress();
+      result.classList.add('hidden');
+      result.innerHTML = '';
+      formWrapper.classList.remove('hidden');
+      $('form-error').classList.add('hidden');
+      var t = $('form-title');
+      t.focus({ preventScroll: true });
+      $('perfil').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ---------- Envio ---------- */
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var err = $('form-error');
+      var missing = validate();
+      if (missing.length) {
+        err.textContent = 'Faltam algumas respostas: ' + missing.join(', ') + '.';
+        err.classList.remove('hidden');
+        return;
+      }
+      err.classList.add('hidden');
+
+      var profile = readProfile();       // 1) captura os dados do formulário
+      timers.forEach(clearTimeout); timers = [];
+      showLoading();                     // 2) oculta o form e mostra o carregamento
+
+      // 3) Aguarda o treino do modelo (se ainda estiver rodando) e um tempo mínimo de feedback visual,
+      //    depois pede a recomendação ao Módulo de IA.
+      Promise.all([PataIA.iniciar(), new Promise(function (r) { setTimeout(r, 2000); })])
+        .then(function () { showResult(profile); })
+        .catch(function (e) {
+          console.error(e);
+          loading.classList.add('hidden');
+          formWrapper.classList.remove('hidden');
+          err.textContent = 'Não foi possível gerar a recomendação. Recarregue a página e tente novamente.';
+          err.classList.remove('hidden');
+        });
+    });
+
+    /* ---------- Painel do Módulo de IA: treino começa ao abrir a página ---------- */
+    function drawChart(curva) {
+      var W = 400, H = 120, pad = 8, max = 0;
+      curva.forEach(function (c) { max = Math.max(max, c.treino, c.validacao); });
+      function pts(key) {
+        return curva.map(function (c, i) {
+          var x = pad + (curva.length === 1 ? 0 : i / (curva.length - 1)) * (W - 2 * pad);
+          var y = H - pad - (c[key] / max) * (H - 2 * pad);
+          return x.toFixed(1) + ',' + y.toFixed(1);
+        }).join(' ');
+      }
+      $('ia-chart').innerHTML =
+        '<polyline fill="none" stroke="#0369a1" stroke-width="2.5" points="' + pts('treino') + '"/>' +
+        '<polyline fill="none" stroke="#ea580c" stroke-width="2.5" stroke-dasharray="6 4" points="' + pts('validacao') + '"/>';
+    }
+
+    function metric(label, value) {
+      return '<div class="rounded-xl bg-slate-50 p-3"><dt class="text-xs font-bold text-slate-600">' + label + '</dt>' +
+        '<dd class="text-xl font-black text-slate-800">' + value + '</dd></div>';
+    }
+
+    PataIA.iniciar(function (pt, total) {
+      $('ia-status').textContent = 'treinando… época ' + pt.epoca + '/' + total;
+    }).then(function (m) {
+      $('ia-status').textContent = 'modelo treinado · acerto top-1 ' + Math.round(m.top1 * 100) + '% · erro médio ' + m.maePontos.toFixed(1) + ' pts';
+      $('ia-status').className = 'text-emerald-800';
+      $('ia-metrics').innerHTML =
+        metric('Erro médio (validação)', m.maePontos.toFixed(1) + ' pts') +
+        metric('Raça nº1 igual ao especialista', Math.round(m.top1 * 100) + '%') +
+        metric('Raça nº1 no top-3 do especialista', Math.round(m.top3 * 100) + '%') +
+        metric('Amostras de treino', m.amostrasTreino.toLocaleString('pt-BR')) +
+        metric('Amostras de validação', m.amostrasValidacao.toLocaleString('pt-BR')) +
+        metric('Parâmetros', m.parametros.toLocaleString('pt-BR')) +
+        metric('Raças na base', window.RACAS.length) +
+        metric('Tempo de treino', m.segundos.toFixed(1) + ' s');
+      function linha(nome, r, destaque) {
+        return '<tr class="border-b border-slate-100' + (destaque ? ' bg-emerald-50 font-extrabold text-slate-900' : '') + '"><td class="py-2 pr-3">' + nome + '</td>' +
+          '<td class="py-2 pr-3">' + r.maePontos.toFixed(1) + ' pts</td><td class="py-2 pr-3">' + Math.round(r.top1 * 100) + '%</td><td class="py-2">' + Math.round(r.top3 * 100) + '%</td></tr>';
+      }
+      $('ia-baselines').innerHTML = linha('Rede neural (nosso modelo)', m, true) +
+        m.baselines.map(function (b) { return linha(b.nome, b); }).join('');
+      drawChart(m.curva);
+      $('ia-details').classList.remove('hidden');
+    }).catch(function (e) {
+      console.error(e);
+      $('ia-status').textContent = 'falha ao treinar o modelo';
+      $('ia-status').className = 'text-rose-800';
+    });
+  })();
+  </script>
+</body>
+</html>
